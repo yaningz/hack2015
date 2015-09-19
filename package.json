@@ -1,0 +1,34 @@
+{
+  "name": "GiftHorse",
+  "version": "0.0.0",
+  "author": "ecsky",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.10.1",
+    "bootstrap": "~3.3.1",
+    "cookie-parser": "~1.3.3",
+    "debug": "~2.1.1",
+    "ejs": "~1.0.0",
+    "express": "~4.10.7",
+    "express-session": "~1.10.1",
+    "mongodb": "*",
+    "mongodb-uri": "~0.9.7",
+    "mongoose": "*",
+    "morgan": "~1.5.1",
+    "passport": "^0.2.1",
+    "passport-facebook": "*",
+    "passport-google-oauth": "*",
+    "passport-twitter": "~1.0.2",
+    "serve-favicon": "~2.2.0",
+    "express-session": "~1.10.1",
+    "bootstrap": "~3.3.1",
+    "mongodb-uri": "~0.9.7",
+    "q": "~1.1.2"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
+}
