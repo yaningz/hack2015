@@ -16,7 +16,7 @@ var mongoose         = require('mongoose');
 var routes     = require('./routes/router');
 // var db         = require('./models/db');
 // var models     = require('./models/models');
-// var configAuth = require('./config/auth');
+var configAuth = require('./config/auth');
 // var userHelper = require('./utils/user');
 
 var app = express();
@@ -42,88 +42,88 @@ app.use(passport.session());
 // Tell app to use routes file
 app.use('/', routes);
 
-// ////////////////////
-// // PASSPORT SETUP //
-// ////////////////////
+////////////////////
+// PASSPORT SETUP //
+////////////////////
 
-// // Passport session setup.
-// //   To support persistent login sessions, Passport needs to be able to
-// //   serialize users into and deserialize users out of the session.  Typically,
-// //   this will be as simple as storing the user ID when serializing, and finding
-// //   the user by ID when deserializing.  However, since this example does not
-// //   have a database of user records, the complete Facebook profile is serialized
-// //   and deserialized.
-// passport.serializeUser(function(user, done) {
-//   done(null, user);
-// });
+// Passport session setup.
+//   To support persistent login sessions, Passport needs to be able to
+//   serialize users into and deserialize users out of the session.  Typically,
+//   this will be as simple as storing the user ID when serializing, and finding
+//   the user by ID when deserializing.  However, since this example does not
+//   have a database of user records, the complete Facebook profile is serialized
+//   and deserialized.
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
 
-// passport.deserializeUser(function(obj, done) {
-//   done(null, obj);
-// });
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
 
 
 
-// /////////////////////////////
-// // FACEBOOK AUTHENTICATION //
-// /////////////////////////////
+/////////////////////////////
+// FACEBOOK AUTHENTICATION //
+/////////////////////////////
 
-// passport.use(new FacebookStrategy({
-//     clientID:     configAuth.facebookAuth.clientID,
-//     clientSecret: configAuth.facebookAuth.clientSecret,
-//     callbackURL:  configAuth.facebookAuth.callbackURL,
-//     passReqToCallback: true
-//   },
-//   function(req, accessToken, refreshToken, profile, done) {
-//     // Verify asynchronously
-//     process.nextTick(function() {
-//       // Check user table for existing user with this id
-//       models.User.findOne({
-//           'userId': profile.provider.charAt(0) + profile.id.toString()
-//       }, function(err, user) {
-//         if (err) {
-//           return done(err);
-//         }
-//         // No user was found, so create a new user with values from the profile
-//         if (!user) {
-//           req.newUser = true;
-//           userHelper.addNewUser(profile, done);
-//         } else {
-//           req.newUser = false;
-//           // Found user, return it
-//           return done(err, user);
-//         }
-//       });
-//     });
-//   }
-// ));
+passport.use(new FacebookStrategy({
+    clientID:     configAuth.facebookAuth.clientID,
+    clientSecret: configAuth.facebookAuth.clientSecret,
+    callbackURL:  configAuth.facebookAuth.callbackURL,
+    passReqToCallback: true
+  },
+  function(req, accessToken, refreshToken, profile, done) {
+    // Verify asynchronously
+    process.nextTick(function() {
+      // Check user table for existing user with this id
+      models.User.findOne({
+          'userId': profile.provider.charAt(0) + profile.id.toString()
+      }, function(err, user) {
+        if (err) {
+          return done(err);
+        }
+        // No user was found, so create a new user with values from the profile
+        if (!user) {
+          req.newUser = true;
+          userHelper.addNewUser(profile, done);
+        } else {
+          req.newUser = false;
+          // Found user, return it
+          return done(err, user);
+        }
+      });
+    });
+  }
+));
 
-// // GET /auth/facebook
-// //   Use passport.authenticate() as route middleware to authenticate the
-// //   request.  The first step in Facebook authentication will involve
-// //   redirecting the user to facebook.com.  After authorization, Facebook will
-// //   redirect the user back to this application at /auth/facebook/callback
-// app.get('/auth/facebook',
-//   passport.authenticate('facebook', { scope: ['email'] }),
-//   function(req, res){
-//     // The request will be redirected to Facebook for authentication, so this
-//     // function will not be called.
-//   });
+// GET /auth/facebook
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  The first step in Facebook authentication will involve
+//   redirecting the user to facebook.com.  After authorization, Facebook will
+//   redirect the user back to this application at /auth/facebook/callback
+app.get('/auth/facebook',
+  passport.authenticate('facebook', { scope: ['email'] }),
+  function(req, res){
+    // The request will be redirected to Facebook for authentication, so this
+    // function will not be called.
+  });
 
-// // GET /auth/facebook/callback
-// //   Use passport.authenticate() as route middleware to authenticate the
-// //   request.  If authentication fails, the user will be redirected back to the
-// //   login page.  Otherwise, the primary route function function will be called,
-// //   which currently goes to registration.
-// app.get('/auth/facebook/callback',
-//   passport.authenticate('facebook', { failureRedirect: '/' }),
-//   function(req, res) {
-//     // Successful authentication
-//     if (req.newUser) {
-//       res.redirect('/register'); // Redirect to registration page for new users
-//     } else {
-//       res.redirect('/pending'); // Redirect to pending page for returning users
-//     }
-//   });
+// GET /auth/facebook/callback
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  If authentication fails, the user will be redirected back to the
+//   login page.  Otherwise, the primary route function function will be called,
+//   which currently goes to registration.
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/' }),
+  function(req, res) {
+    // Successful authentication
+    if (req.newUser) {
+      res.redirect('/register'); // Redirect to registration page for new users
+    } else {
+      res.redirect('/pending'); // Redirect to pending page for returning users
+    }
+  });
 
 // ////////////////////////////
 // // GOOGLE+ AUTHENTICATION //
