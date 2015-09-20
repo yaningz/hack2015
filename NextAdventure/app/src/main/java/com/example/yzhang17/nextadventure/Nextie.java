@@ -43,7 +43,7 @@ public class Nextie {
         Random r = new Random();
         if(r.nextFloat() <= accuracy) {
             int damage = (int)((r.nextFloat()- .5) * power * .1 + power);
-            currentHP -= damage;
+            currentHP = Math.max(currentHP-damage, 0);
             return damage;
         }
         return 0;
@@ -53,7 +53,13 @@ public class Nextie {
      *
      * @return Am I dead yet?
      */
-    public boolean amDead(){
+    public boolean isDead(){
         return currentHP <= 0;
     }
+
+    /**
+     *
+     * @return My name
+     */
+    public String getName() { return name; }
 }
