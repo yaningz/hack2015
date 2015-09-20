@@ -28,4 +28,8 @@ public class Move {
         return 0;
     }
 
+    public String getName(){
+        return name;
+    }
+
 }
